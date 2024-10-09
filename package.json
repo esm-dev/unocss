@@ -5,6 +5,7 @@
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "dependencies": {
+    "@iconify/json": "2.2.258",
     "@unocss/core": "0.63.4",
     "@unocss/preset-attributify": "0.63.4",
     "@unocss/preset-icons": "0.63.4",
