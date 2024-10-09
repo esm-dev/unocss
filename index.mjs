@@ -158,5 +158,8 @@ export async function generate(configcss, input, options) {
       }
     }
   }
+  if (presets.length === 0) {
+    presets.push(presetUno);
+  }
   return createGenerator({ presets, theme, shortcuts, preflights }).generate(input, options);
 }
