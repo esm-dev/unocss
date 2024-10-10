@@ -1,8 +1,7 @@
 import { generate } from "./index.mjs";
 const css = String.raw;
 
-const ret = await generate(
-  css`
+const configCSS = css`
 @import "preset-uno";
 @import "preset-wind";
 @import "preset-typography";
@@ -42,11 +41,14 @@ const ret = await generate(
   padding: 0;
   margin: 0;
 }
-`,
-  `
-<div class="custom animate-spin">UNO</div>
-<div class="i-twemoji-grinning-face-with-smiling-eyes hover:i-twemoji-face-with-tears-of-joy" />
-`,
+`;
+
+const ret = await generate(
+  [
+    `<div class="custom animate-spin">UNO</div>`,
+    `<div class="i-twemoji-grinning-face-with-smiling-eyes hover:i-twemoji-face-with-tears-of-joy" />`,
+  ],
+  { configCSS },
 );
 
 function assertStringIncludes(actual, expected) {
@@ -56,24 +58,27 @@ function assertStringIncludes(actual, expected) {
 }
 
 // preflights
-assertStringIncludes(ret.css, '*{padding:0;margin:0}');
+assertStringIncludes(ret.css, "*{padding:0;margin:0}");
 
 // animations
-assertStringIncludes(ret.css, '@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}');
-assertStringIncludes(ret.css, '.animate-spin{animation:spin 1s ease 1;}');
+assertStringIncludes(ret.css, "@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}");
+assertStringIncludes(ret.css, ".animate-spin{animation:spin 1s ease 1;}");
 
 // shortcuts
-assertStringIncludes(ret.css, `.custom{display:flex;font-size:1.125rem;line-height:1.75rem;--un-text-opacity:1;color:rgb(35 35 35 / var(--un-text-opacity));font-weight:700;font-family:"Inter",`);
+assertStringIncludes(
+  ret.css,
+  `.custom{display:flex;font-size:1.125rem;line-height:1.75rem;--un-text-opacity:1;color:rgb(35 35 35 / var(--un-text-opacity));font-weight:700;font-family:"Inter",`,
+);
 
 // web fonts
-assertStringIncludes(ret.css, 'src: url(https://fonts.gstatic.com/s/inter/');
+assertStringIncludes(ret.css, "src: url(https://fonts.gstatic.com/s/inter/");
 
 // icons
 assertStringIncludes(ret.css, '.i-twemoji-grinning-face-with-smiling-eyes{background:url("data:image/svg+xml;utf8,');
 assertStringIncludes(ret.css, '.hover\\:i-twemoji-face-with-tears-of-joy:hover{background:url("data:image/svg+xml;utf8,');
 
 // extra css
-assertStringIncludes(ret.css, '.custom{display:flex}');
+assertStringIncludes(ret.css, ".custom{display:flex}");
 
 console.log("✅ All tests passed");
 process.exit(0);

@@ -21,7 +21,13 @@ const unoPresets = {
 };
 const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, "-$1").toLowerCase());
 
-export async function generate(configcss, input, options) {
+/** generate CSS with UnoCSS engine.
+ * @param {string | string[]} input
+ * @param {(import("@unocss/core").GenerateOptions<Boolean> & { configCSS?: string }) | undefined} options
+ * @returns {Promise<import("@unocss/core").GenerateResult>}
+ */
+export async function generate(input, options) {
+  const configcss = options?.configCSS;
   const presets = [];
   const theme = {};
   const shortcuts = {};
@@ -81,85 +87,87 @@ export async function generate(configcss, input, options) {
       }
     });
   };
-  const ast = parse(configcss, { parseCustomProperty: true });
-  if (ast.type !== "StyleSheet") {
-    throw new Error("Invalid CSS file");
-  }
-  walk(ast, (node) => {
-    if (node.type === "Atrule") {
-      if (node.name === "import" && node.prelude && node.prelude.type === "AtrulePrelude") {
-        const name = node.prelude.children.first;
-        if (name && name.type === "String") {
-          const preset = unoPresets[name.value];
-          if (preset && !presets.includes(preset)) {
-            presets.push(preset);
+  if (configcss) {
+    const ast = parse(configcss, { parseCustomProperty: true });
+    if (ast.type !== "StyleSheet") {
+      throw new Error("Invalid CSS file");
+    }
+    walk(ast, (node) => {
+      if (node.type === "Atrule") {
+        if (node.name === "import" && node.prelude && node.prelude.type === "AtrulePrelude") {
+          const name = node.prelude.children.first;
+          if (name && name.type === "String") {
+            const preset = unoPresets[name.value];
+            if (preset && !presets.includes(preset)) {
+              presets.push(preset);
+            }
+          }
+        } else if (node.name === "theme" && node.block) {
+          parseTheme(node.block);
+        } else if (node.name === "keyframes" && node.block && node.prelude?.type === "AtrulePrelude") {
+          const id = node.prelude.children.first;
+          if (id && id.type === "Identifier") {
+            extendThemeAnimation("keyframes", id.name, "{" + toCSS(node.block) + "}");
           }
         }
-      } else if (node.name === "theme" && node.block) {
-        parseTheme(node.block);
-      } else if (node.name === "keyframes" && node.block && node.prelude?.type === "AtrulePrelude") {
-        const id = node.prelude.children.first;
-        if (id && id.type === "Identifier") {
-          extendThemeAnimation("keyframes", id.name, "{" + toCSS(node.block) + "}");
-        }
+        return walk.skip;
       }
-      return walk.skip;
-    }
-    if (node.type === "Rule" && node.prelude.type === "SelectorList" && node.block) {
-      const isSlingleSelector = node.prelude.children.size === 1;
-      const firstSelector = node.prelude.children.first.children.first;
-      if (isSlingleSelector && firstSelector.type === "PseudoClassSelector" && firstSelector.name === "theme") {
-        parseTheme(node.block);
-      } else {
-        for (const item of node.prelude.children) {
-          const selector = item.children.first;
-          if (selector.type === "ClassSelector") {
-            const className = selector.name;
-            const css = [];
-            const applyAtRule = [];
-            for (const child of node.block.children) {
-              if (child.type === "Atrule" && child.name === "apply" && child.prelude) {
-                applyAtRule.push(toCSS(child.prelude));
-              } else if (child.type === "Declaration" && child.property === "--uno") {
-                applyAtRule.push(toCSS(child.value).trim());
-              } else {
-                css.push(toCSS(child));
+      if (node.type === "Rule" && node.prelude.type === "SelectorList" && node.block) {
+        const isSlingleSelector = node.prelude.children.size === 1;
+        const firstSelector = node.prelude.children.first.children.first;
+        if (isSlingleSelector && firstSelector.type === "PseudoClassSelector" && firstSelector.name === "theme") {
+          parseTheme(node.block);
+        } else {
+          for (const item of node.prelude.children) {
+            const selector = item.children.first;
+            if (selector.type === "ClassSelector") {
+              const className = selector.name;
+              const css = [];
+              const applyAtRule = [];
+              for (const child of node.block.children) {
+                if (child.type === "Atrule" && child.name === "apply" && child.prelude) {
+                  applyAtRule.push(toCSS(child.prelude));
+                } else if (child.type === "Declaration" && child.property === "--uno") {
+                  applyAtRule.push(toCSS(child.value).trim());
+                } else {
+                  css.push(toCSS(child));
+                }
               }
-            }
-            if (applyAtRule.length) {
-              shortcuts[className] = applyAtRule.join(" ");
-            }
-            if (css.length) {
+              if (applyAtRule.length) {
+                shortcuts[className] = applyAtRule.join(" ");
+              }
+              if (css.length) {
+                preflights.push({
+                  layer: "utilities",
+                  getCSS: (theme) => {
+                    return `.${className}{${css.join(";")}}`;
+                  },
+                });
+              }
+            } else {
               preflights.push({
-                layer: "utilities",
+                layer: "preflights",
                 getCSS: (theme) => {
-                  return `.${className}{${css.join(";")}}`;
+                  return `${toCSS(item)}{${toCSS(node.block)}}`;
                 },
               });
             }
-          } else {
-            preflights.push({
-              layer: "preflights",
-              getCSS: (theme) => {
-                return `${toCSS(item)}{${toCSS(node.block)}}`;
-              },
-            });
           }
         }
+        return walk.skip;
       }
-      return walk.skip;
-    }
-  });
-  if (Object.keys(webFonts).length) {
-    for (let i = 0; i < presets.length; i++) {
-      if (presets[i] === presetWebFonts) {
-        presets[i] = presetWebFonts({ provider: "google", fonts: webFonts });
-        break;
+    });
+    if (Object.keys(webFonts).length) {
+      for (let i = 0; i < presets.length; i++) {
+        if (presets[i] === presetWebFonts) {
+          presets[i] = presetWebFonts({ provider: "google", fonts: webFonts });
+          break;
+        }
       }
     }
   }
   if (presets.length === 0) {
     presets.push(presetUno);
   }
-  return createGenerator({ presets, theme, shortcuts, preflights }).generate(input, options);
+  return createGenerator({ presets, theme, shortcuts, preflights }).generate(String(input), options);
 }
