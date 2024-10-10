@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@iconify/json':
-        specifier: 2.2.258
-        version: 2.2.258
       '@unocss/core':
         specifier: 0.63.4
         version: 0.63.4
@@ -41,6 +38,10 @@ importers:
       css-tree:
         specifier: 3.0.0
         version: 3.0.0
+    optionalDependencies:
+      '@iconify/json':
+        specifier: '*'
+        version: 2.2.258
     devDependencies:
       '@types/css-tree':
         specifier: 2.3.8
@@ -184,6 +185,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
+    optional: true
 
   '@iconify/types@2.0.0': {}
 
