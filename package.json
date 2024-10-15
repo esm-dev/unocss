@@ -1,10 +1,11 @@
 {
   "name": "esm-unocss",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "main": "index.mjs",
   "module": "index.mjs",
   "dependencies": {
+    "@iconify/json": "2.2.260",
     "@unocss/core": "0.63.4",
     "@unocss/preset-attributify": "0.63.4",
     "@unocss/preset-icons": "0.63.4",
@@ -16,11 +17,7 @@
     "@unocss/preset-wind": "0.63.4",
     "css-tree": "3.0.0"
   },
-  "optionalDependencies": {
-    "@iconify/json": "*"
-  },
   "devDependencies": {
-    "@iconify/json": "2.2.260",
     "@types/css-tree": "2.3.8"
   },
   "scripts": {
