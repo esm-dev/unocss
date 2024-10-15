@@ -160,7 +160,7 @@ export async function generate(input, options) {
     if (Object.keys(webFonts).length) {
       for (let i = 0; i < presets.length; i++) {
         if (presets[i] === presetWebFonts) {
-          presets[i] = presetWebFonts({ provider: "google", fonts: webFonts });
+          presets[i] = presetWebFonts({ provider: "google", fonts: webFonts, timeouts: { warning: 16 * 1000, failure: 15 * 1000 } });
           break;
         }
       }
