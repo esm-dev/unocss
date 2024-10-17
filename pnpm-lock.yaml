@@ -9,40 +9,40 @@ importers:
   .:
     dependencies:
       '@unocss/core':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-attributify':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-icons':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-legacy-compat':
         specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-mini':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-rem-to-px':
         specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-tagify':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-typography':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-uno':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-web-fonts':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-wind':
-        specifier: 0.63.4
+        specifier: ^0.63.4
         version: 0.63.4
       css-tree:
-        specifier: 3.0.0
+        specifier: ^3.0.0
         version: 3.0.0
     optionalDependencies:
       '@iconify/json':
