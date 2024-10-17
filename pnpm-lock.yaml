@@ -17,8 +17,14 @@ importers:
       '@unocss/preset-icons':
         specifier: 0.63.4
         version: 0.63.4
+      '@unocss/preset-legacy-compat':
+        specifier: ^0.63.4
+        version: 0.63.4
       '@unocss/preset-mini':
         specifier: 0.63.4
+        version: 0.63.4
+      '@unocss/preset-rem-to-px':
+        specifier: ^0.63.4
         version: 0.63.4
       '@unocss/preset-tagify':
         specifier: 0.63.4
@@ -82,8 +88,14 @@ packages:
   '@unocss/preset-icons@0.63.4':
     resolution: {integrity: sha512-V7JV2xvEGeNVjP6HT4IG/BY/HgajJt9CLT2sgKbaVCU9hNOuBs1YTOxua0KLynbTYwr5F5cDMuE/9slQYinZmg==}
 
+  '@unocss/preset-legacy-compat@0.63.4':
+    resolution: {integrity: sha512-8LjCyZkPsKsXBwM8/54LvkuUUwSkSgc9b5K0qIEflCBEksTDghMgJH517iKua+GuLs3TPCmaE2GsEH+tM5eZ/Q==}
+
   '@unocss/preset-mini@0.63.4':
     resolution: {integrity: sha512-sim1/uy/XaVzdnMdepXdbdacXF5QNkPDnl4PYBWTyGuT5yKFpuipWpJDS5zZH5W6PYzKdcDA3YiaJ0S5CiUWpQ==}
+
+  '@unocss/preset-rem-to-px@0.63.4':
+    resolution: {integrity: sha512-+mYeky2d78CGN0GefQ8UnYTUu/AX5DOYagtIy35A1vJ+/q1AATIKFHr+LLarcmYHZody7+vyEqtUnt6JngC3pQ==}
 
   '@unocss/preset-tagify@0.63.4':
     resolution: {integrity: sha512-RQkeSCKrGAowomjh8/chlnVWWOFlC+QkHB1oY5isRXNO2HStESZljyL/MisRpgjj0ubPiocoFCI2hRzXT/HrSg==}
@@ -223,11 +235,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@unocss/preset-legacy-compat@0.63.4':
+    dependencies:
+      '@unocss/core': 0.63.4
+
   '@unocss/preset-mini@0.63.4':
     dependencies:
       '@unocss/core': 0.63.4
       '@unocss/extractor-arbitrary-variants': 0.63.4
       '@unocss/rule-utils': 0.63.4
+
+  '@unocss/preset-rem-to-px@0.63.4':
+    dependencies:
+      '@unocss/core': 0.63.4
 
   '@unocss/preset-tagify@0.63.4':
     dependencies:

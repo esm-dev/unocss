@@ -2,7 +2,9 @@ import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
 import presetAttributify from "@unocss/preset-attributify";
 import presetIcons from "@unocss/preset-icons";
+import presetLegacyCompat from "@unocss/preset-legacy-compat";
 import presetMini from "@unocss/preset-mini";
+import presetRemToPx from "@unocss/preset-rem-to-px";
 import presetTagify from "@unocss/preset-tagify";
 import presetTypography from "@unocss/preset-typography";
 import presetUno from "@unocss/preset-uno";
@@ -10,14 +12,16 @@ import presetWebFonts from "@unocss/preset-web-fonts";
 import presetWind, { theme } from "@unocss/preset-wind";
 
 const unoPresets = {
-  "preset-uno": presetUno,
-  "preset-wind": presetWind,
-  "preset-typography": presetTypography,
-  "preset-mini": presetMini,
-  "preset-web-fonts": presetWebFonts,
-  "preset-tagify": presetTagify,
-  "preset-icons": presetIcons,
   "preset-attributify": presetAttributify,
+  "preset-icons": presetIcons,
+  "preset-legacy-compat": presetLegacyCompat,
+  "preset-mini": presetMini,
+  "preset-rem-to-px": presetRemToPx,
+  "preset-tagify": presetTagify,
+  "preset-typography": presetTypography,
+  "preset-uno": presetUno,
+  "preset-web-fonts": presetWebFonts,
+  "preset-wind": presetWind,
 };
 const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, "-$1").toLowerCase());
 
@@ -97,7 +101,7 @@ export async function generate(input, options) {
         if (node.name === "import" && node.prelude && node.prelude.type === "AtrulePrelude") {
           const name = node.prelude.children.first;
           if (name && name.type === "String") {
-            const preset = unoPresets[name.value];
+            const preset = name.value.startsWith("@unocss/") ? unoPresets[name.value.slice(8)] : unoPresets[name.value];
             if (preset && !presets.includes(preset)) {
               presets.push(preset);
             }
@@ -122,12 +126,15 @@ export async function generate(input, options) {
             const selector = item.children.first;
             if (selector.type === "ClassSelector") {
               const className = selector.name;
-              const css = [];
               const applyAtRule = [];
+              const css = [];
               for (const child of node.block.children) {
                 if (child.type === "Atrule" && child.name === "apply" && child.prelude) {
                   applyAtRule.push(toCSS(child.prelude));
-                } else if (child.type === "Declaration" && child.property === "--uno") {
+                } else if (
+                  child.type === "Declaration"
+                  && (child.property === "--uno" || child.property === "--at-apply" || child.property === "--uno-apply")
+                ) {
                   applyAtRule.push(toCSS(child.value).trim());
                 } else {
                   css.push(toCSS(child));
