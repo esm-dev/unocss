@@ -31,7 +31,7 @@ const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, 
  * @returns {Promise<import("@unocss/core").GenerateResult>}
  */
 export async function generate(input, options) {
-  const configcss = options?.configCSS;
+  const configCSS = options?.configCSS;
   const presets = [];
   const theme = {};
   const shortcuts = {};
@@ -91,8 +91,8 @@ export async function generate(input, options) {
       }
     });
   };
-  if (configcss) {
-    const ast = parse(configcss, { parseCustomProperty: true });
+  if (configCSS) {
+    const ast = parse(configCSS, { parseCustomProperty: true });
     if (ast.type !== "StyleSheet") {
       throw new Error("Invalid CSS file");
     }
@@ -168,7 +168,10 @@ export async function generate(input, options) {
       for (let i = 0; i < presets.length; i++) {
         if (presets[i] === presetWebFonts) {
           presets[i] = presetWebFonts({ provider: "google", fonts: webFonts, timeouts: { warning: 16 * 1000, failure: 15 * 1000 } });
-          break;
+        } else if (presets[i] === presetIcons) {
+          if (globalThis.Deno || import.meta.url.startsWith("https://")) {
+            presets[i] = presetIcons({ cdn: "https://esm.sh/" });
+          }
         }
       }
     }
@@ -176,5 +179,8 @@ export async function generate(input, options) {
   if (presets.length === 0) {
     presets.push(presetUno);
   }
-  return createGenerator({ presets, theme, shortcuts, preflights }).generate(String(input), options);
+  return createGenerator({ presets, theme, shortcuts, preflights }).generate(
+    Array.isArray(input) ? input.join("\n") : input,
+    options,
+  );
 }
