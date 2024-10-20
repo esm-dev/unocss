@@ -169,8 +169,12 @@ export async function generate(input, options) {
         if (presets[i] === presetWebFonts) {
           presets[i] = presetWebFonts({ provider: "google", fonts: webFonts, timeouts: { warning: 16 * 1000, failure: 15 * 1000 } });
         } else if (presets[i] === presetIcons) {
-          if (globalThis.Deno || import.meta.url.startsWith("https://")) {
-            presets[i] = presetIcons({ cdn: "https://esm.sh/" });
+          if (globalThis.Deno) {
+            presets[i] = presetIcons({
+              cdn: "https://esm.sh/",
+              // use deno's module cache system
+              customFetch: (url) => import(url, { with: { type: "json" } }),
+            });
           }
         }
       }
