@@ -23,11 +23,13 @@
   },
   "devDependencies": {
     "@iconify/json": "2.2.260",
-    "@types/css-tree": "2.3.8"
+    "@types/css-tree": "2.3.8",
+    "@unocss/reset": "0.63.6"
   },
   "scripts": {
     "prepublishOnly": "node test.mjs",
-    "test": "node test.mjs"
+    "test": "node test.mjs",
+    "postinstall": "deno run -A reset.mjs update"
   },
   "license": "MIT"
 }

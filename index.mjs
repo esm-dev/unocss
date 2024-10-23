@@ -1,6 +1,7 @@
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
 import { theme } from "@unocss/preset-wind";
+import reset from "./reset.mjs";
 
 const unoPresets = new Set([
   "preset-attributify",
@@ -80,19 +81,45 @@ export async function init(configCSS) {
       }
     });
   };
+  let resetCSS = "";
   if (configCSS) {
     const ast = parse(configCSS, { parseCustomProperty: true });
     if (ast.type !== "StyleSheet") {
       throw new Error("Invalid CSS file");
     }
+    let webFontsProvider = "none";
     walk(ast, (node) => {
       if (node.type === "Atrule") {
         if (node.name === "import" && node.prelude && node.prelude.type === "AtrulePrelude") {
           const name = node.prelude.children.first;
           if (name && name.type === "String") {
             const presetName = name.value.startsWith("@unocss/") ? name.value.slice(8) : name.value;
-            if (unoPresets.has(presetName) && !presets.includes(presetName)) {
+            if (presetName === "reset") {
+              let resetProvdier = "tailwind";
+              if (node.prelude.children.size > 1) {
+                const mq = node.prelude.children.last;
+                if (mq.type === "MediaQueryList") {
+                  const query = toCSS(mq);
+                  if (query in reset) {
+                    resetProvdier = query;
+                  }
+                }
+              }
+              resetCSS = reset[resetProvdier];
+            } else if (unoPresets.has(presetName) && !presets.includes(presetName)) {
               presets.push(presetName);
+              if (presetName === "preset-web-fonts") {
+                webFontsProvider = "google";
+                if (node.prelude.children.size > 1) {
+                  const mq = node.prelude.children.last;
+                  if (mq.type === "MediaQueryList") {
+                    const query = toCSS(mq);
+                    if (query in ["google", "bunny", "fontshare"]) {
+                      webFontsProvider = query;
+                    }
+                  }
+                }
+              }
             }
           }
         } else if (node.name === "theme" && node.block) {
@@ -159,7 +186,7 @@ export async function init(configCSS) {
       presets[i] = preset;
       if (presetName === "preset-web-fonts") {
         if (Object.keys(webFonts).length > 0) {
-          presets[i] = preset({ provider: "google", fonts: webFonts, timeouts: { warning: 16 * 1000, failure: 15 * 1000 } });
+          presets[i] = preset({ provider: webFontsProvider, fonts: webFonts, timeouts: { warning: 16 * 1000, failure: 15 * 1000 } });
         }
       } else if (presetName === "preset-icons") {
         if (globalThis.Deno) {
@@ -184,7 +211,7 @@ export async function init(configCSS) {
       await uno.applyExtractors(code, undefined, tokens);
       return tokenSize !== tokens.size;
     },
-    generate: (options) => uno.generate(tokens, options),
+    generate: (options) => uno.generate(tokens, options).then(ret => resetCSS + ret.css),
   };
 }
 
