@@ -3,10 +3,10 @@ import reset from "./reset.mjs";
 const css = String.raw;
 
 const configCSS = css`
-@import "reset" eric-meyer;
+@import "reset/eric-meyer";
 @import "preset-uno";
 @import "preset-typography";
-@import "preset-web-fonts" google;
+@import "preset-web-fonts";
 @import "preset-tagify";
 @import "preset-icons";
 @import "preset-attributify";

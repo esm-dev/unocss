@@ -1,7 +1,7 @@
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
 import { theme } from "@unocss/preset-wind";
-import reset from "./reset.mjs";
+import resetCollection from "./reset.mjs";
 
 const unoPresets = new Set([
   "preset-attributify",
@@ -93,30 +93,31 @@ export async function init(configCSS) {
         if (node.name === "import" && node.prelude && node.prelude.type === "AtrulePrelude") {
           const name = node.prelude.children.first;
           if (name && name.type === "String") {
-            const presetName = name.value.startsWith("@unocss/") ? name.value.slice(8) : name.value;
+            const [presetName, ...reset] = (name.value.startsWith("@unocss/") ? name.value.slice(8) : name.value).split("/");
             if (presetName === "reset") {
-              let resetProvdier = "tailwind";
-              if (node.prelude.children.size > 1) {
-                const mq = node.prelude.children.last;
-                if (mq.type === "MediaQueryList") {
-                  const query = toCSS(mq);
-                  if (query in reset) {
-                    resetProvdier = query;
-                  }
+              let resetName = "tailwind";
+              if (reset.length > 0) {
+                let subPath = reset.join("/");
+                if (subPath.endsWith(".css")) {
+                  subPath = subPath.slice(0, -4);
+                }
+                if (subPath in resetCollection) {
+                  resetName = subPath;
+                } else {
+                  throw new Error("Invalid reset css: " + subPath);
                 }
               }
-              resetCSS = reset[resetProvdier];
+              resetCSS = resetCollection[resetName];
             } else if (unoPresets.has(presetName) && !presets.includes(presetName)) {
               presets.push(presetName);
               if (presetName === "preset-web-fonts") {
                 webFontsProvider = "google";
-                if (node.prelude.children.size > 1) {
-                  const mq = node.prelude.children.last;
-                  if (mq.type === "MediaQueryList") {
-                    const query = toCSS(mq);
-                    if (query in ["google", "bunny", "fontshare"]) {
-                      webFontsProvider = query;
-                    }
+                if (reset.length > 0) {
+                  const subPath = reset.join("/");
+                  if (["google", "bunny", "fontshare"].includes(subPath)) {
+                    webFontsProvider = subPath;
+                  } else {
+                    throw new Error("Invalid webfonts provider: " + subPath+ ". Available providers are: google, bunny, fontshare");
                   }
                 }
               }
