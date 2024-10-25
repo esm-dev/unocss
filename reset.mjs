@@ -1,4 +1,4 @@
-// deno run -A reset.mjs
+// deno run -A reset.mjs update
 if (import.meta.main && Deno.args[0] === "update") {
   const collect = {};
   for (const name of ["tailwind", "tailwind-compat", "normalize", "eric-meyer"]) {
