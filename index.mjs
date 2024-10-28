@@ -19,7 +19,7 @@ const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, 
 
 /** create a UnoCSS generator with the given config CSS.
  * @param { string | undefined } configCSS
- * @returns { Promise<{ update: (code: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<import("@unocss/core").GenerateResult> }> }
+ * @returns { Promise<{ update: (code: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<string> }> }
  */
 export async function init(configCSS) {
   const presets = [];
@@ -55,22 +55,24 @@ export async function init(configCSS) {
         } else {
           const themeScope = themeProperties.find((p) => prop.startsWith("--" + p + "-"));
           if (themeScope) {
-            if (themeScope === "font-family" && value.startsWith("webfont(") && value.endsWith(")")) {
-              const family = prop.slice(14);
-              const fonts = [];
+            if (themeScope === "font-family") {
+              const familyName = toCamelCase(prop.slice(14));
+              const anyFonts = [];
               if (node.value.type === "Value" && node.value.children) {
                 for (const child of node.value.children) {
                   if (child.type === "Function" && child.name === "webfont" && child.children) {
                     for (const arg of child.children) {
                       if (arg.type === "String") {
-                        fonts.push(arg.value);
+                        webFonts[familyName] ?? (webFonts[familyName] = []).push(arg.value);
                       }
                     }
+                  } else if (child.type === "String") {
+                    anyFonts.push(child.value);
                   }
                 }
               }
-              if (fonts.length) {
-                webFonts[toCamelCase(family)] = fonts;
+              if (anyFonts.length > 0) {
+                extendTheme("fontFamily", familyName, anyFonts.join(","));
               }
             } else {
               extendTheme(toCamelCase(themeScope), prop.slice(themeScope.length + 3), value);
@@ -117,7 +119,7 @@ export async function init(configCSS) {
                   if (["google", "bunny", "fontshare"].includes(subPath)) {
                     webFontsProvider = subPath;
                   } else {
-                    throw new Error("Invalid webfonts provider: " + subPath+ ". Available providers are: google, bunny, fontshare");
+                    throw new Error("Invalid webfonts provider: " + subPath + ". Available providers are: google, bunny, fontshare");
                   }
                 }
               }
@@ -219,7 +221,7 @@ export async function init(configCSS) {
 /** generate CSS with UnoCSS engine.
  * @param { string | string[] } input
  * @param { ({ configCSS?: string } & import("@unocss/core").GenerateOptions<Boolean>) | undefined } options
- * @returns { Promise<import("@unocss/core").GenerateResult> }
+ * @returns { Promise<string> }
  */
 export async function generate(input, options) {
   const uno = await init(options?.configCSS);
