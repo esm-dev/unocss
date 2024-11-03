@@ -210,9 +210,9 @@ export async function init(configCSS) {
   const tokens = new Set();
   return {
     update: async (code) => {
-      const tokenSize = tokens.size;
+      const prevTokens = Array.from(tokens);
       await uno.applyExtractors(code, undefined, tokens);
-      return tokenSize !== tokens.size;
+      return prevTokens.size !== tokens.size || prevTokens.some(token => !tokens.has(token));
     },
     generate: (options) => uno.generate(tokens, options).then(ret => resetCSS + ret.css),
   };
