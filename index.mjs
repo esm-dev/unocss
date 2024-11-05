@@ -130,7 +130,7 @@ export async function init(configCSS) {
         } else if (node.name === "keyframes" && node.block && node.prelude?.type === "AtrulePrelude") {
           const id = node.prelude.children.first;
           if (id && id.type === "Identifier") {
-            extendThemeAnimation("keyframes", id.name, "{" + toCSS(node.block) + "}");
+            extendThemeAnimation("keyframes", id.name, toCSS(node.block));
           }
         }
         return walk.skip;
@@ -174,7 +174,7 @@ export async function init(configCSS) {
               preflights.push({
                 layer: "preflights",
                 getCSS: (theme) => {
-                  return `${toCSS(item)}{${toCSS(node.block)}}`;
+                  return `${toCSS(item)}${toCSS(node.block)}`;
                 },
               });
             }
