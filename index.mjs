@@ -19,7 +19,7 @@ const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, 
 
 /** create a UnoCSS generator with the given config CSS.
  * @param { string | undefined } configCSS
- * @returns { Promise<{ update: (code: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<string> }> }
+ * @returns { Promise<{ update: (code: string, id?: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<string> }> }
  */
 export async function init(configCSS) {
   const presets = [];
@@ -207,24 +207,41 @@ export async function init(configCSS) {
     presets.push(presetUno);
   }
   const uno = createGenerator({ presets, theme, shortcuts, preflights });
-  const tokens = new Set();
+  const tokenMap = new Map();
   return {
-    update: async (code) => {
+    update: async (code, id = ".") => {
+      const tokens = tokenMap.get(id) ?? tokenMap.set(id, new Set()).get(id);
       const prevTokens = Array.from(tokens);
-      await uno.applyExtractors(code, undefined, tokens);
-      return prevTokens.size !== tokens.size || prevTokens.some(token => !tokens.has(token));
+      await uno.applyExtractors(code, id, tokens);
+      return prevTokens.length !== tokens.size || prevTokens.some(token => !tokens.has(token));
     },
-    generate: (options) => uno.generate(tokens, options).then(ret => resetCSS + ret.css),
+    generate: (options) => {
+      let tokens;
+      if (tokenMap.size === 0) {
+        return "";
+      }
+      if (tokenMap.size === 1) {
+        tokens = tokenMap.values().next().value;
+      } else {
+        tokens = new Set();
+        for (const [_, set] of tokenMap) {
+          for (const token of set) {
+            tokens.add(token);
+          }
+        }
+      }
+      return uno.generate(tokens, options).then(ret => resetCSS + ret.css);
+    },
   };
 }
 
 /** generate CSS with UnoCSS engine.
- * @param { string | string[] } input
+ * @param { string | string[] } content
  * @param { ({ configCSS?: string } & import("@unocss/core").GenerateOptions<Boolean>) | undefined } options
  * @returns { Promise<string> }
  */
-export async function generate(input, options) {
+export async function generate(content, options) {
   const uno = await init(options?.configCSS);
-  await uno.update(Array.isArray(input) ? input.join("\n") : input);
+  await uno.update(Array.isArray(content) ? content.join("\n") : content);
   return uno.generate(options);
 }
