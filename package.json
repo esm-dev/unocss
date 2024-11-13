@@ -1,6 +1,6 @@
 {
   "name": "@esm.sh/unocss",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "main": "index.mjs",
   "module": "index.mjs",
@@ -22,8 +22,8 @@
     "@iconify/json": "*"
   },
   "devDependencies": {
-    "@iconify/json": "2.2.268",
-    "@types/css-tree": "2.3.8",
+    "@iconify/json": "2.2.271",
+    "@types/css-tree": "2.3.9",
     "@unocss/reset": "0.64.0"
   },
   "scripts": {
