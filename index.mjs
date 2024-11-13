@@ -1,3 +1,7 @@
+import { homedir } from "os";
+import { join } from "path";
+import { existsSync, mkdirSync } from "fs";
+import { readFile, writeFile } from "fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
 import { theme } from "@unocss/preset-wind";
@@ -16,6 +20,10 @@ const unoPresets = new Set([
   "preset-wind",
 ]);
 const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, "-$1").toLowerCase());
+const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
+const webFontCacheDir = join(homedir(), ".cache", "unocss", "webfonts");
+const encoder = new TextEncoder();
+const wrLocks = new Map();
 
 /** create a UnoCSS generator with the given config CSS.
  * @param { string | undefined } configCSS
@@ -189,14 +197,52 @@ export async function init(configCSS) {
       presets[i] = preset;
       if (presetName === "preset-web-fonts") {
         if (Object.keys(webFonts).length > 0) {
-          presets[i] = preset({ provider: webFontsProvider, fonts: webFonts, timeouts: { warning: 16 * 1000, failure: 15 * 1000 } });
+          presets[i] = preset({
+            provider: webFontsProvider,
+            fonts: webFonts,
+            // disable the default timeout settings
+            timeouts: false,
+            customFetch: async (url) => {
+              if (!existsSync(webFontCacheDir)) {
+                mkdirSync(webFontCacheDir, { recursive: true });
+              }
+              const cachePath = join(webFontCacheDir, await shasum(url));
+              if (!wrLocks.has(cachePath) && existsSync(cachePath)) {
+                return readFile(cachePath, "utf8");
+              }
+              return new Promise((resolve, reject) => {
+                fetch(url, { headers: { "User-Agent": woff2UA } }).then(res => {
+                  if (!res.ok) {
+                    reject(new Error(`Failed to fetch ${url}: ${res.statusText}`));
+                    return;
+                  }
+                  res.text().then(css => {
+                    if (wrLocks.has(cachePath)) {
+                      resolve(css);
+                      return;
+                    }
+                    wrLocks.set(cachePath, true);
+                    writeFile(cachePath, css, "utf8").finally(() => {
+                      wrLocks.delete(cachePath);
+                      resolve(css);
+                    });
+                  }, reject);
+                }, reject);
+                setTimeout(() => reject(new Error("Timeout")), 10 * 1000);
+              });
+            },
+          });
         }
       } else if (presetName === "preset-icons") {
+        // download icons from CDN in Deno
         if (globalThis.Deno) {
           presets[i] = preset({
             cdn: "https://esm.sh/",
             // use deno's module cache system
-            customFetch: (url) => import(url, { with: { type: "json" } }),
+            customFetch: (url) => new Promise((resolve, reject) => {
+              import(url, { with: { type: "json" } }).then(resolve, reject);
+              setTimeout(() => reject(new Error("Timeout")), 10 * 1000);
+            })
           });
         }
       }
@@ -244,4 +290,9 @@ export async function generate(content, options) {
   const uno = await init(options?.configCSS);
   await uno.update(Array.isArray(content) ? content.join("\n") : content);
   return uno.generate(options);
+}
+
+async function shasum(str) {
+  const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(str));
+  return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }

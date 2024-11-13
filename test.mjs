@@ -13,7 +13,7 @@ const configCSS = css`
 
 :theme {
   --color-primary: #232323;
-  --font-family-sans: webfont("Inter");
+  --font-family-sans: webfont("Inter:400,500,600");
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
@@ -74,7 +74,11 @@ assertStringIncludes(
 );
 
 // web fonts
+assertStringIncludes(generatedCSS, "font-face {\n  font-family: 'Inter';\n  font-style: normal;\n  font-weight: 400;\n");
+assertStringIncludes(generatedCSS, "font-face {\n  font-family: 'Inter';\n  font-style: normal;\n  font-weight: 500;\n");
+assertStringIncludes(generatedCSS, "font-face {\n  font-family: 'Inter';\n  font-style: normal;\n  font-weight: 600;\n");
 assertStringIncludes(generatedCSS, "src: url(https://fonts.gstatic.com/s/inter/");
+assertStringIncludes(generatedCSS, ".woff2) format('woff2')");
 
 // icons
 assertStringIncludes(generatedCSS, '.i-twemoji-grinning-face-with-smiling-eyes{background:url("data:image/svg+xml;utf8,');
