@@ -252,7 +252,7 @@ export async function init(configCSS) {
     const { presetUno } = await import("@unocss/preset-uno");
     presets.push(presetUno);
   }
-  const uno = createGenerator({ presets, theme, shortcuts, preflights });
+  const uno = await createGenerator({ presets, theme, shortcuts, preflights });
   const tokenMap = new Map();
   return {
     update: async (code, id = ".") => {
