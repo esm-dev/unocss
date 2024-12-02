@@ -5,26 +5,26 @@
   "main": "index.mjs",
   "module": "index.mjs",
   "dependencies": {
-    "@unocss/core": "^0.64.0",
-    "@unocss/preset-attributify": "^0.64.0",
-    "@unocss/preset-icons": "^0.64.0",
-    "@unocss/preset-legacy-compat": "^0.64.0",
-    "@unocss/preset-mini": "^0.64.0",
-    "@unocss/preset-rem-to-px": "^0.64.0",
-    "@unocss/preset-tagify": "^0.64.0",
-    "@unocss/preset-typography": "^0.64.0",
-    "@unocss/preset-uno": "^0.64.0",
-    "@unocss/preset-web-fonts": "^0.64.0",
-    "@unocss/preset-wind": "^0.64.0",
+    "@unocss/core": "^0.65.0",
+    "@unocss/preset-attributify": "^0.65.0",
+    "@unocss/preset-icons": "^0.65.0",
+    "@unocss/preset-legacy-compat": "^0.65.0",
+    "@unocss/preset-mini": "^0.65.0",
+    "@unocss/preset-rem-to-px": "^0.65.0",
+    "@unocss/preset-tagify": "^0.65.0",
+    "@unocss/preset-typography": "^0.65.0",
+    "@unocss/preset-uno": "^0.65.0",
+    "@unocss/preset-web-fonts": "^0.65.0",
+    "@unocss/preset-wind": "^0.65.0",
     "css-tree": "^3.0.1"
   },
   "optionalDependencies": {
     "@iconify/json": "*"
   },
   "devDependencies": {
-    "@iconify/json": "2.2.271",
+    "@iconify/json": "2.2.278",
     "@types/css-tree": "2.3.9",
-    "@unocss/reset": "0.64.0"
+    "@unocss/reset": "0.65.0"
   },
   "scripts": {
     "prepublishOnly": "node test.mjs",

@@ -9,38 +9,38 @@ importers:
   .:
     dependencies:
       '@unocss/core':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-attributify':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-icons':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-legacy-compat':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-mini':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-rem-to-px':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-tagify':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-typography':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-uno':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-web-fonts':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       '@unocss/preset-wind':
-        specifier: ^0.64.0
-        version: 0.64.0
+        specifier: ^0.65.0
+        version: 0.65.0
       css-tree:
         specifier: ^3.0.1
         version: 3.0.1
@@ -53,8 +53,8 @@ importers:
         specifier: 2.3.9
         version: 2.3.9
       '@unocss/reset':
-        specifier: 0.64.0
-        version: 0.64.0
+        specifier: 0.65.0
+        version: 0.65.0
 
 packages:
 
@@ -79,47 +79,47 @@ packages:
   '@types/css-tree@2.3.9':
     resolution: {integrity: sha512-g1FE6xkPDP4tsccmTd6jIugjKZdxIDqAf9h2pc+4LsGgYbOyfa9phNjBHYbm6FtwIlNfT1NBx3f2zSeqO7aRAw==}
 
-  '@unocss/core@0.64.0':
-    resolution: {integrity: sha512-Qb8wWPYNlTagCdJGzULew+e3NMM8Bd7fr38lDLgrMj+njop+wzkSe1ZZOyMMH9yHSq/Rznn5eCjnyzyHwxGslQ==}
+  '@unocss/core@0.65.0':
+    resolution: {integrity: sha512-2QwjMq/bm7lbxk6BTyGblWuTtSfXRuHJSoN1zys53ES+SrVVYA8FVDIpiTQbxENLcXhwwq1OaN3z7zi714n+OA==}
 
-  '@unocss/extractor-arbitrary-variants@0.64.0':
-    resolution: {integrity: sha512-oVB8l8zM+x0MQJTkraRcsrfJnWEwyPVgMgtzmNUm//HqV+xTrjZCNtOqHFNIZdj/+w0gkErGQLxzRwyPjlHq4g==}
+  '@unocss/extractor-arbitrary-variants@0.65.0':
+    resolution: {integrity: sha512-flWxSflswTAQs2FE0Qn5aaZOkOioKf0N3kGV11vRi0tkRtiQOmWJ24Va5ysdC37MeeWvzsOYfVu662ZVE1CQ9w==}
 
-  '@unocss/preset-attributify@0.64.0':
-    resolution: {integrity: sha512-3T1mktq5rAQxHXtdLkjjj1UOjPwy9iGbVUChvxyaGV5oOsj1mvfe1oetxz8HqAVQak8MtvsJzFzvuuQQln/6OA==}
+  '@unocss/preset-attributify@0.65.0':
+    resolution: {integrity: sha512-xDAvlyWmOY1oGvdqyWdbaunBchOlhYny7+wJyK0j6Tk0UErDD4372Vu4WL95HTZE/dL19nFNdovnYrP6CsLgEw==}
 
-  '@unocss/preset-icons@0.64.0':
-    resolution: {integrity: sha512-jhozA4r583agZZpKttdootaWfvQ29lY/kHxNU1Ah2xeRQcVXXEh7M3cG0bo9HSIX9/BgXSk5rWQlqSPIqFl4Lw==}
+  '@unocss/preset-icons@0.65.0':
+    resolution: {integrity: sha512-zQS7xSBb2Y5ZraARqi6XMFha1z7H0P3tl5HZ6c3nBwwN0FuCbaJnbpdzdgqezcI2V3KctZNiDM3UAT18lSuamQ==}
 
-  '@unocss/preset-legacy-compat@0.64.0':
-    resolution: {integrity: sha512-z4/L9rGR+G1E6weEp3YAwK7MUP4ROUN1NMYA2kFA8jzTrrXfQTfADAQZl5uM6+SAmb/5J+HKj+UrDe5OVlomIw==}
+  '@unocss/preset-legacy-compat@0.65.0':
+    resolution: {integrity: sha512-aLDtrDk6o/gRWItN6DnAs4zBoCNFNoPZ+GulNXlNKKXGY6WgWIC3ro4bH55oBNRRnUl1/wwrR44UnpirgyT1tA==}
 
-  '@unocss/preset-mini@0.64.0':
-    resolution: {integrity: sha512-bc7zanalVQUrETJ06eyS7y/lhceRlY8kBG/lRCV/dYmKl4Ho/s57LrpZH0G63OcO6IfWIjwoZHVC8/RHAqnYvQ==}
+  '@unocss/preset-mini@0.65.0':
+    resolution: {integrity: sha512-Vc6ESW/Y5WFMc4TWhTmGtvljlzN83oq0RzPxgsB0XTgIIXBTRpf9O/v3y58lPUyJQo13ycafp+2CqtVVPC5zzg==}
 
-  '@unocss/preset-rem-to-px@0.64.0':
-    resolution: {integrity: sha512-zQR+s4mPZTwPpookAXBV7wo5jmTu1AtiyOgVAGsrRpm3jOLeFaUAE8Do+UL63aD0X3dDBl7ouiohl0mK0ShEWA==}
+  '@unocss/preset-rem-to-px@0.65.0':
+    resolution: {integrity: sha512-QvAm+Hc2aLfgFvz/cWh3jHof+5eF8mWvd0i5sJsgoPd4fey5lT9kEHyNNySFozMtjHtlVZUhzmeofGTLsVcLVA==}
 
-  '@unocss/preset-tagify@0.64.0':
-    resolution: {integrity: sha512-WlRQXYgtVzJpVlZ+itXhrQyvMj6XW1InNIfvAHMorr5BGvMGETLRnuWwYYhGg2YDF/g+/EucU5PQmk9UkurBzg==}
+  '@unocss/preset-tagify@0.65.0':
+    resolution: {integrity: sha512-jqwp8bQN2aS+xr61oIH+wzlerp4Yk0uCACqoE04p/AjQnRPTJ65hIcaMhZe1iQZ49W23EIbZUAODvJuiXVxIXA==}
 
-  '@unocss/preset-typography@0.64.0':
-    resolution: {integrity: sha512-hMKxhHTRUjvwB0gcdWOh6zWWolH9pvIvgB4p2GaFT1vKyFD0wkTZ/7S/Q3OMKJyevSKHyIgKd+PhNGKTx5FuQQ==}
+  '@unocss/preset-typography@0.65.0':
+    resolution: {integrity: sha512-WUAeRi6C7fSyyg6zOyRbtWwAVIU2lRilUh4+vbaAqmYtQUTrHQnGOjXZpi3WnV1SC3ES4MHDwNenKOtcnL4JkQ==}
 
-  '@unocss/preset-uno@0.64.0':
-    resolution: {integrity: sha512-gUmuL8anty551r/Q2XU5wc0aNZ+te4yydnamXHSUv3EkX6PCphOaiWsQ5f95fj26G8EYH9fLBvxqXurFBPM7og==}
+  '@unocss/preset-uno@0.65.0':
+    resolution: {integrity: sha512-Lsq67rJJ1YoKInwEFsMXMRZUhmxfwQhULPI/A7ghV0Ot/QvCv4hP64QoAReBvkjeV3JgyJJnFb2v4fAfASV8OA==}
 
-  '@unocss/preset-web-fonts@0.64.0':
-    resolution: {integrity: sha512-qraIhS0tCFHvdPQnzGTfi/dggwyboWPU8UQn8oLMsmPKogNPsYQfjrtTZs8X6F1KNaPV18c6saaWYvVZ8tXPoA==}
+  '@unocss/preset-web-fonts@0.65.0':
+    resolution: {integrity: sha512-4gChAmET8v0e8nyi98KYmRLIRYhwyHKdwBYZ4rgrKwVhPE59R4TEOhGQdHMOaBLv0j70oUBK40EiFALvvp5yFw==}
 
-  '@unocss/preset-wind@0.64.0':
-    resolution: {integrity: sha512-cJbZI4etFrIIQoC1VhRqyEZU5fUaYqOH3uIt5lM3osxBdAvHds7SPjLRbdR612US7JbuPeFhMMRnA1EYoo39sQ==}
+  '@unocss/preset-wind@0.65.0':
+    resolution: {integrity: sha512-teb1KrIxUY8GAYONsgvICyNcioBqo+NzvXymnxZAuVLEt/i3FPi/SriVOn2cda30vzoU7S+Bi1ML0QtA/O6BLg==}
 
-  '@unocss/reset@0.64.0':
-    resolution: {integrity: sha512-75SiDtRX/mtg/7GWeoLfDfdWF4z59zF1XesL46FNd2hDZL36a+SZHIKB/J+PPzLyX9irqm3mAETS2PNfynuJpA==}
+  '@unocss/reset@0.65.0':
+    resolution: {integrity: sha512-S1AxgLKCpatz0zqyYg0koGZ003RLbRdTF03fl1jZMuTqzRRPC1FU+cq7Mqknr22Fn7JXfYQw2oTF+BH207M7Ug==}
 
-  '@unocss/rule-utils@0.64.0':
-    resolution: {integrity: sha512-R5b/uspq6XsmpEqhxSzOOePHsS+pdxya+0pkQw7m6thsUxNDL7kVDpBiz2iNX5lnwagvhyhUWYu85a8XmZ8ymw==}
+  '@unocss/rule-utils@0.65.0':
+    resolution: {integrity: sha512-a9glvClBhyhp7ORsmjViTZRWkXbYiuhGEKqMG83vD8JWI7yrVQ2WyVbHdqCjBpxzprdzY2nYD+cUHk3hS0HUgg==}
     engines: {node: '>=14'}
 
   acorn@8.12.1:
@@ -223,70 +223,70 @@ snapshots:
 
   '@types/css-tree@2.3.9': {}
 
-  '@unocss/core@0.64.0': {}
+  '@unocss/core@0.65.0': {}
 
-  '@unocss/extractor-arbitrary-variants@0.64.0':
+  '@unocss/extractor-arbitrary-variants@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
 
-  '@unocss/preset-attributify@0.64.0':
+  '@unocss/preset-attributify@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
 
-  '@unocss/preset-icons@0.64.0':
+  '@unocss/preset-icons@0.65.0':
     dependencies:
       '@iconify/utils': 2.1.33
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
       ofetch: 1.4.1
     transitivePeerDependencies:
       - supports-color
 
-  '@unocss/preset-legacy-compat@0.64.0':
+  '@unocss/preset-legacy-compat@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
 
-  '@unocss/preset-mini@0.64.0':
+  '@unocss/preset-mini@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
-      '@unocss/extractor-arbitrary-variants': 0.64.0
-      '@unocss/rule-utils': 0.64.0
+      '@unocss/core': 0.65.0
+      '@unocss/extractor-arbitrary-variants': 0.65.0
+      '@unocss/rule-utils': 0.65.0
 
-  '@unocss/preset-rem-to-px@0.64.0':
+  '@unocss/preset-rem-to-px@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
 
-  '@unocss/preset-tagify@0.64.0':
+  '@unocss/preset-tagify@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
 
-  '@unocss/preset-typography@0.64.0':
+  '@unocss/preset-typography@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
-      '@unocss/preset-mini': 0.64.0
+      '@unocss/core': 0.65.0
+      '@unocss/preset-mini': 0.65.0
 
-  '@unocss/preset-uno@0.64.0':
+  '@unocss/preset-uno@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
-      '@unocss/preset-mini': 0.64.0
-      '@unocss/preset-wind': 0.64.0
-      '@unocss/rule-utils': 0.64.0
+      '@unocss/core': 0.65.0
+      '@unocss/preset-mini': 0.65.0
+      '@unocss/preset-wind': 0.65.0
+      '@unocss/rule-utils': 0.65.0
 
-  '@unocss/preset-web-fonts@0.64.0':
+  '@unocss/preset-web-fonts@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
       ofetch: 1.4.1
 
-  '@unocss/preset-wind@0.64.0':
+  '@unocss/preset-wind@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
-      '@unocss/preset-mini': 0.64.0
-      '@unocss/rule-utils': 0.64.0
+      '@unocss/core': 0.65.0
+      '@unocss/preset-mini': 0.65.0
+      '@unocss/rule-utils': 0.65.0
 
-  '@unocss/reset@0.64.0': {}
+  '@unocss/reset@0.65.0': {}
 
-  '@unocss/rule-utils@0.64.0':
+  '@unocss/rule-utils@0.65.0':
     dependencies:
-      '@unocss/core': 0.64.0
+      '@unocss/core': 0.65.0
       magic-string: 0.30.12
 
   acorn@8.12.1: {}
