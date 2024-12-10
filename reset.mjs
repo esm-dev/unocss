@@ -1,15 +1,13 @@
 // deno run -A reset.mjs update
-if (import.meta.main && Deno.args[0] === "update") {
+if (typeof Deno !== "undefined" && import.meta.main && Deno.args[0] === "update") {
   const collect = {};
   for (const name of ["tailwind", "tailwind-compat", "normalize", "eric-meyer"]) {
     const css = Deno.readTextFileSync("./node_modules/@unocss/reset/" + name + ".css");
     collect[name] = css;
   }
-  const js = Deno.readTextFileSync(new URL(import.meta.url));
-  Deno.writeTextFileSync(
-    new URL(import.meta.url),
-    js.split("\nexport default")[0] + "\nexport default " + JSON.stringify(collect, null, 2) + ";\n",
-  );
+  const selfUrl = new URL(import.meta.url);
+  const js = Deno.readTextFileSync(selfUrl);
+  Deno.writeTextFileSync(selfUrl, js.split("\nexport default")[0] + "\nexport default " + JSON.stringify(collect, null, 2) + ";\n");
 }
 
 export default {
