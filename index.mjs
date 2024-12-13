@@ -1,7 +1,7 @@
-import { homedir } from "os";
-import { join } from "path";
-import { existsSync, mkdirSync } from "fs";
-import { readFile, writeFile } from "fs/promises";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { existsSync, mkdirSync } from "node:fs";
+import { readFile, writeFile } from "node:fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
 import { theme } from "@unocss/preset-wind";
