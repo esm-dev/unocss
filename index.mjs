@@ -1,4 +1,3 @@
-import { homedir } from "node:os";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
@@ -65,6 +64,7 @@ const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537
 /**
  * @typedef {{
  *  configCSS?: string,
+ *  customCacheDir?: string,
  *  customImport?: (name: string) => Promise<Record<string, unknown>> | undefined
  * }} Options
  */
@@ -73,7 +73,7 @@ const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537
  * @param { Options } options
  * @returns { Promise<{ update: (code: string, id?: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<string> }> }
  */
-export async function init({ configCSS, customImport } = {}) {
+export async function init({ configCSS, customCacheDir, customImport } = {}) {
   const presets = [];
   const theme = {};
   const shortcuts = {};
@@ -246,7 +246,7 @@ export async function init({ configCSS, customImport } = {}) {
       presets[i] = preset;
       if (presetName === "preset-web-fonts") {
         if (Object.keys(webFonts).length > 0) {
-          const cacheDir = homedir() + "/.cache/unocss/webfonts";
+          const cacheDir = (customCacheDir ?? ((await import("node:os")).homedir() + "/.cache/unocss")) + "/webfonts";
           presets[i] = preset({
             provider: webFontsProvider,
             fonts: webFonts,
@@ -278,7 +278,7 @@ export async function init({ configCSS, customImport } = {}) {
           });
         }
       } else if (presetName === "preset-icons") {
-        const cacheDir = homedir() + "/.cache/unocss/icons";
+        const cacheDir = (customCacheDir ?? ((await import("node:os")).homedir() + "/.cache/unocss")) + "/icons";
         presets[i] = preset({
           cdn: "https://esm.sh/",
           customFetch: async (url) => {
