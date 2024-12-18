@@ -44,10 +44,6 @@ importers:
       css-tree:
         specifier: ^3.1.0
         version: 3.1.0
-    optionalDependencies:
-      '@iconify/json':
-        specifier: '*'
-        version: 2.2.258
     devDependencies:
       '@types/css-tree':
         specifier: 2.3.9
@@ -63,9 +59,6 @@ packages:
 
   '@antfu/utils@0.7.10':
     resolution: {integrity: sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww==}
-
-  '@iconify/json@2.2.258':
-    resolution: {integrity: sha512-BW622A/EZ5651qOYkPkXn906U1bLsk/Cv/rYtmkArbZz/h+0c4WdcdrAHiC+weMqjQIUxB1JE20bpERT79BFIg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -198,12 +191,6 @@ snapshots:
       tinyexec: 0.3.0
 
   '@antfu/utils@0.7.10': {}
-
-  '@iconify/json@2.2.258':
-    dependencies:
-      '@iconify/types': 2.0.0
-      pathe: 1.1.2
-    optional: true
 
   '@iconify/types@2.0.0': {}
 
