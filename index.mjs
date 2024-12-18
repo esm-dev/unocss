@@ -1,10 +1,8 @@
 import { homedir } from "node:os";
-import { join } from "node:path";
-import { existsSync, mkdirSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
-import { theme } from "@unocss/preset-wind";
 import resetCollection from "./reset.mjs";
 
 const unoPresets = new Set([
@@ -19,17 +17,63 @@ const unoPresets = new Set([
   "preset-web-fonts",
   "preset-wind",
 ]);
-const themeProperties = Object.keys(theme).map((key) => key.replace(/([A-Z])/g, "-$1").toLowerCase());
+const themeProperties = [
+  "width",
+  "height",
+  "max-width",
+  "max-height",
+  "min-width",
+  "min-height",
+  "inline-size",
+  "block-size",
+  "max-inline-size",
+  "max-block-size",
+  "min-inline-size",
+  "min-block-size",
+  "colors",
+  "font-family",
+  "font-size",
+  "font-weight",
+  "breakpoints",
+  "vertical-breakpoints",
+  "border-radius",
+  "line-height",
+  "letter-spacing",
+  "word-spacing",
+  "box-shadow",
+  "text-indent",
+  "text-shadow",
+  "text-stroke-width",
+  "blur",
+  "drop-shadow",
+  "easing",
+  "transition-property",
+  "line-width",
+  "spacing",
+  "duration",
+  "ring-width",
+  "preflight-base",
+  "containers",
+  "z-index",
+  "media",
+  "aria",
+  "animation",
+  "supports",
+];
 const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
-const webFontCacheDir = join(homedir(), ".cache", "unocss", "webfonts");
-const encoder = new TextEncoder();
-const wrLocks = new Map();
 
-/** create a UnoCSS generator with the given config CSS.
- * @param { string | undefined } configCSS
+/**
+ * @typedef {{
+ *  configCSS?: string,
+ *  customImport?: (name: string) => Promise<Record<string, unknown>> | undefined
+ * }} Options
+ */
+
+/** create a UnoCSS generator.
+ * @param { Options } options
  * @returns { Promise<{ update: (code: string, id?: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<string> }> }
  */
-export async function init(configCSS) {
+export async function init({ configCSS, customImport } = {}) {
   const presets = [];
   const theme = {};
   const shortcuts = {};
@@ -90,6 +134,11 @@ export async function init(configCSS) {
         return walk.skip;
       }
     });
+  };
+  const importModule = (url) => customImport?.(url) ?? import(url);
+  const shasum = async (str) => {
+    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
   };
   let resetCSS = "";
   if (configCSS) {
@@ -193,21 +242,22 @@ export async function init(configCSS) {
     });
     for (let i = 0; i < presets.length; i++) {
       const presetName = presets[i];
-      const { default: preset } = await import("@unocss/" + presetName);
+      const { default: preset } = await importModule("@unocss/" + presetName + (presetName === "preset-icons" ? "/browser" : ""));
       presets[i] = preset;
       if (presetName === "preset-web-fonts") {
         if (Object.keys(webFonts).length > 0) {
+          const cacheDir = homedir() + "/.cache/unocss/webfonts";
           presets[i] = preset({
             provider: webFontsProvider,
             fonts: webFonts,
             // disable the default timeout settings
             timeouts: false,
             customFetch: async (url) => {
-              if (!existsSync(webFontCacheDir)) {
-                mkdirSync(webFontCacheDir, { recursive: true });
+              if (!existsSync(cacheDir)) {
+                await mkdir(cacheDir, { recursive: true });
               }
-              const cachePath = join(webFontCacheDir, await shasum(url));
-              if (!wrLocks.has(cachePath) && existsSync(cachePath)) {
+              const cachePath = cacheDir + "/" + (await shasum(url));
+              if (existsSync(cachePath)) {
                 return readFile(cachePath, "utf8");
               }
               return new Promise((resolve, reject) => {
@@ -217,13 +267,7 @@ export async function init(configCSS) {
                     return;
                   }
                   res.text().then(css => {
-                    if (wrLocks.has(cachePath)) {
-                      resolve(css);
-                      return;
-                    }
-                    wrLocks.set(cachePath, true);
                     writeFile(cachePath, css, "utf8").finally(() => {
-                      wrLocks.delete(cachePath);
                       resolve(css);
                     });
                   }, reject);
@@ -234,65 +278,72 @@ export async function init(configCSS) {
           });
         }
       } else if (presetName === "preset-icons") {
-        // download icons from CDN in Deno
-        if (globalThis.Deno) {
-          presets[i] = preset({
-            cdn: "https://esm.sh/",
-            // use deno's module cache system
-            customFetch: (url) => new Promise((resolve, reject) => {
-              import(url, { with: { type: "json" } }).then(resolve, reject);
+        const cacheDir = homedir() + "/.cache/unocss/icons";
+        presets[i] = preset({
+          cdn: "https://esm.sh/",
+          customFetch: async (url) => {
+            if (!existsSync(cacheDir)) {
+              await mkdir(cacheDir, { recursive: true });
+            }
+            const cachePath = cacheDir + "/" + (await shasum(url));
+            if (existsSync(cachePath)) {
+              try {
+                return readFile(cachePath, "utf8").then(text => JSON.parse(text));
+              } catch {
+                // continue to fetch
+              }
+            }
+            return new Promise((resolve, reject) => {
+              const p = customImport?.(url) ?? fetch(url).then(res => {
+                if (!res.ok) {
+                  throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
+                }
+                return res.json();
+              });
+              p.then(json => {
+                writeFile(cachePath, JSON.stringify(json), "utf8").finally(() => {
+                  resolve(json);
+                });
+              }, reject);
               setTimeout(() => reject(new Error("Timeout")), 10 * 1000);
-            })
-          });
-        }
+            });
+          },
+        });
       }
     }
   }
+
+  // add default preset if no preset is provided
   if (presets.length === 0) {
-    const { presetUno } = await import("@unocss/preset-uno");
+    const { presetUno } = await importModule("@unocss/preset-uno");
     presets.push(presetUno);
   }
+
   const uno = await createGenerator({ presets, theme, shortcuts, preflights });
-  const tokenMap = new Map();
+  const tokens = new Set();
+
   return {
     update: async (code, id = ".") => {
-      const tokens = tokenMap.get(id) ?? tokenMap.set(id, new Set()).get(id);
       const prevSize = tokens.size;
       await uno.applyExtractors(code, id, tokens);
       return tokens.size !== prevSize;
     },
     generate: (options) => {
-      let tokens;
-      if (tokenMap.size === 0) {
-        return "";
-      }
-      if (tokenMap.size === 1) {
-        tokens = tokenMap.values().next().value;
-      } else {
-        tokens = new Set();
-        for (const [_, set] of tokenMap) {
-          for (const token of set) {
-            tokens.add(token);
-          }
-        }
+      if (tokens.size === 0) {
+        return resetCSS;
       }
       return uno.generate(tokens, options).then(ret => resetCSS + ret.css);
     },
   };
 }
 
-/** generate CSS with UnoCSS engine.
+/** Use UnoCSS to generate CSS from the given content.
  * @param { string | string[] } content
- * @param { ({ configCSS?: string } & import("@unocss/core").GenerateOptions<Boolean>) | undefined } options
+ * @param { Options & import("@unocss/core").GenerateOptions<Boolean> } options
  * @returns { Promise<string> }
  */
-export async function generate(content, options) {
-  const uno = await init(options?.configCSS);
+export async function generate(content, options = {}) {
+  const uno = await init(options);
   await uno.update(Array.isArray(content) ? content.join("\n") : content);
   return uno.generate(options);
-}
-
-async function shasum(str) {
-  const hashBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(str));
-  return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
