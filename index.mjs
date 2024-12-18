@@ -65,7 +65,7 @@ const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537
  * @typedef {{
  *  configCSS?: string,
  *  customCacheDir?: string,
- *  customImport?: (name: string) => Promise<Record<string, unknown>> | undefined
+ *  customImport?: (name: string) => Promise<Record<string, unknown>>
  * }} Options
  */
 
@@ -135,7 +135,7 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
       }
     });
   };
-  const importModule = (url) => customImport?.(url) ?? import(url);
+  const importModule = (name) => customImport?.(name) ?? import(name);
   const shasum = async (str) => {
     const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
     return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
