@@ -1,6 +1,6 @@
 {
   "name": "@esm.sh/unocss",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "type": "module",
   "main": "index.mjs",
   "module": "index.mjs",
