@@ -65,7 +65,7 @@ const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537
  * @typedef {{
  *  configCSS?: string,
  *  customCacheDir?: string,
- *  iconLoader?: (url: string) => Promise<Record<string, unknown>>
+ *  iconLoader?: (collectionName: string) => Promise<Record<string, unknown>>
  * }} Options
  */
 
@@ -278,10 +278,15 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
         presets[i] = preset({
           cdn: "https://esm.sh/",
           customFetch: async (url) => {
+            const { pathname } = new URL(url);
+            const [scopeName, collectionName, path, shouldBeVoid] = pathname.slice(1).split("/");
+            if (scopeName !== "@iconify-json" || path !== "icons.json" || shouldBeVoid !== undefined) {
+              throw new Error("Invalid icon URL: " + url);
+            }
             if (!existsSync(cacheDir)) {
               await mkdir(cacheDir, { recursive: true });
             }
-            const cachePath = cacheDir + "/" + (await shasum(url));
+            const cachePath = cacheDir + "/" + collectionName + ".json";
             if (existsSync(cachePath)) {
               try {
                 return readFile(cachePath, "utf8").then(text => JSON.parse(text));
@@ -290,7 +295,7 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
               }
             }
             return new Promise((resolve, reject) => {
-              const p = iconLoader ? iconLoader(url) : fetch(url).then(res => {
+              const p = iconLoader ? iconLoader(collectionName) : fetch(url).then(res => {
                 if (!res.ok) {
                   throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
                 }

@@ -51,7 +51,7 @@ const generatedCSS = await generate(
     `<div border="2 rounded blue-200"></div>`,
     `<flex></flex>`,
   ],
-  { configCSS },
+  { configCSS, customCacheDir: "./node_modules/@unocss/preset-icons/cache" },
 );
 
 function assertStringIncludes(actual, expected) {
