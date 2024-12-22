@@ -65,7 +65,7 @@ const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537
  * @typedef {{
  *  configCSS?: string,
  *  customCacheDir?: string,
- *  customImport?: (name: string) => Promise<Record<string, unknown>>
+ *  iconLoader?: (url: string) => Promise<Record<string, unknown>>
  * }} Options
  */
 
@@ -73,7 +73,7 @@ const woff2UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537
  * @param { Options } options
  * @returns { Promise<{ update: (code: string, id?: string) => Promise<boolean>, generate: (options: import("@unocss/core").GenerateOptions) => Promise<string> }> }
  */
-export async function init({ configCSS, customCacheDir, customImport } = {}) {
+export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
   const presets = [];
   const theme = {};
   const shortcuts = {};
@@ -87,6 +87,7 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
     const animation = theme.animation || (theme.animation = {});
     (animation[type] || (animation[type] = {}))[toCamelCase(key)] = value;
   };
+  const defaultCacheDir = async () => (await import("node:os")).homedir() + "/.cache/unocss";
   const parseTheme = (block) => {
     walk(block, (node) => {
       if (node.type === "Declaration") {
@@ -134,11 +135,6 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
         return walk.skip;
       }
     });
-  };
-  const importModule = (name) => customImport?.(name) ?? import(name);
-  const shasum = async (str) => {
-    const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
   };
   let resetCSS = "";
   if (configCSS) {
@@ -242,11 +238,11 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
     });
     for (let i = 0; i < presets.length; i++) {
       const presetName = presets[i];
-      const { default: preset } = await importModule("@unocss/" + presetName + (presetName === "preset-icons" ? "/browser" : ""));
+      const { default: preset } = await importPreset(presetName);
       presets[i] = preset;
       if (presetName === "preset-web-fonts") {
         if (Object.keys(webFonts).length > 0) {
-          const cacheDir = (customCacheDir ?? ((await import("node:os")).homedir() + "/.cache/unocss")) + "/webfonts";
+          const cacheDir = (customCacheDir ?? await defaultCacheDir()) + "/webfonts";
           presets[i] = preset({
             provider: webFontsProvider,
             fonts: webFonts,
@@ -278,7 +274,7 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
           });
         }
       } else if (presetName === "preset-icons") {
-        const cacheDir = (customCacheDir ?? ((await import("node:os")).homedir() + "/.cache/unocss")) + "/icons";
+        const cacheDir = (customCacheDir ?? await defaultCacheDir()) + "/icons";
         presets[i] = preset({
           cdn: "https://esm.sh/",
           customFetch: async (url) => {
@@ -294,7 +290,7 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
               }
             }
             return new Promise((resolve, reject) => {
-              const p = customImport?.(url) ?? fetch(url).then(res => {
+              const p = iconLoader ? iconLoader(url) : fetch(url).then(res => {
                 if (!res.ok) {
                   throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
                 }
@@ -315,7 +311,7 @@ export async function init({ configCSS, customCacheDir, customImport } = {}) {
 
   // add default preset if no preset is provided
   if (presets.length === 0) {
-    const { presetUno } = await importModule("@unocss/preset-uno");
+    const { default: presetUno } = await importPreset("preset-uno");
     presets.push(presetUno);
   }
 
@@ -346,4 +342,44 @@ export async function generate(content, options = {}) {
   const uno = await init(options);
   await uno.update(Array.isArray(content) ? content.join("\n") : content);
   return uno.generate(options);
+}
+
+/** Import a UnoCSS preset.
+ * @param { string } name
+ * @returns { Promise<{default: import("@unocss/core").PresetFactory}> }
+ */
+function importPreset(name) {
+  switch (name) {
+    case "preset-attributify":
+      return import("@unocss/preset-attributify");
+    case "preset-icons":
+      return import("@unocss/preset-icons/browser");
+    case "preset-legacy-compat":
+      return import("@unocss/preset-legacy-compat");
+    case "preset-mini":
+      return import("@unocss/preset-mini");
+    case "preset-rem-to-px":
+      return import("@unocss/preset-rem-to-px");
+    case "preset-tagify":
+      return import("@unocss/preset-tagify");
+    case "preset-typography":
+      return import("@unocss/preset-typography");
+    case "preset-uno":
+      return import("@unocss/preset-uno");
+    case "preset-web-fonts":
+      return import("@unocss/preset-web-fonts");
+    case "preset-wind":
+      return import("@unocss/preset-wind");
+    default:
+      throw new Error("module not found: " + name);
+  }
+}
+
+/** Calculate SHA-256 hash of the given string.
+ * @param { string } str
+ * @returns { Promise<string> }
+ */
+async function shasum(str) {
+  const hashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
