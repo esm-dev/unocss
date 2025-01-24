@@ -3,13 +3,13 @@ import reset from "./reset.mjs";
 const css = String.raw;
 
 const configCSS = css`
-@import "reset/eric-meyer";
-@import "preset-uno";
-@import "preset-typography";
-@import "preset-web-fonts";
-@import "preset-tagify";
-@import "preset-icons";
-@import "preset-attributify";
+@import "@unocss/reset/eric-meyer";
+@import "@unocss/preset-uno";
+@import "@unocss/preset-typography";
+@import "@unocss/preset-web-fonts";
+@import "@unocss/preset-tagify";
+@import "@unocss/preset-icons";
+@import "@unocss/preset-attributify";
 
 :theme {
   --color-primary: #232323;
@@ -51,7 +51,7 @@ const generatedCSS = await generate(
     `<div border="2 rounded blue-200"></div>`,
     `<flex></flex>`,
   ],
-  { configCSS, customCacheDir: "./node_modules/@unocss/preset-icons/cache" },
+  { configCSS, customCacheDir: "./node_modules/@unocss/cache" },
 );
 
 function assertStringIncludes(actual, expected) {

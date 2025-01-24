@@ -5,22 +5,22 @@
   "main": "index.mjs",
   "module": "index.mjs",
   "dependencies": {
-    "@unocss/core": "^0.65.2",
-    "@unocss/preset-attributify": "^0.65.2",
-    "@unocss/preset-icons": "^0.65.2",
-    "@unocss/preset-legacy-compat": "^0.65.2",
-    "@unocss/preset-mini": "^0.65.2",
-    "@unocss/preset-rem-to-px": "^0.65.2",
-    "@unocss/preset-tagify": "^0.65.2",
-    "@unocss/preset-typography": "^0.65.2",
-    "@unocss/preset-uno": "^0.65.2",
-    "@unocss/preset-web-fonts": "^0.65.2",
-    "@unocss/preset-wind": "^0.65.2",
+    "@unocss/core": "^65.4.3",
+    "@unocss/preset-attributify": "^65.4.3",
+    "@unocss/preset-icons": "^65.4.3",
+    "@unocss/preset-legacy-compat": "^65.4.3",
+    "@unocss/preset-mini": "^65.4.3",
+    "@unocss/preset-rem-to-px": "^65.4.3",
+    "@unocss/preset-tagify": "^65.4.3",
+    "@unocss/preset-typography": "^65.4.3",
+    "@unocss/preset-uno": "^65.4.3",
+    "@unocss/preset-web-fonts": "^65.4.3",
+    "@unocss/preset-wind": "^65.4.3",
     "css-tree": "^3.1.0"
   },
   "devDependencies": {
-    "@types/css-tree": "2.3.9",
-    "@unocss/reset": "0.65.2"
+    "@types/css-tree": "2.3.10",
+    "@unocss/reset": "65.4.3"
   },
   "scripts": {
     "prepublishOnly": "node test.mjs",
