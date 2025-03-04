@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
-import resetCollection from "./reset.mjs";
+import reset from "./reset.mjs";
 
 const unoPresets = new Set([
   "preset-attributify",
@@ -148,27 +148,27 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
         if (node.name === "import" && node.prelude && node.prelude.type === "AtrulePrelude") {
           const name = node.prelude.children.first;
           if (name && name.type === "String") {
-            const [presetName, ...reset] = (name.value.startsWith("@unocss/") ? name.value.slice(8) : name.value).split("/");
+            const [presetName, ...a] = (name.value.startsWith("@unocss/") ? name.value.slice(8) : name.value).split("/");
             if (presetName === "reset") {
-              let resetName = "tailwind";
-              if (reset.length > 0) {
-                let subPath = reset.join("/");
-                if (subPath.endsWith(".css")) {
-                  subPath = subPath.slice(0, -4);
+              let resetName = "tailwind.css";
+              if (a.length > 0) {
+                let subPath = a.join("/");
+                if (!subPath.endsWith(".css")) {
+                  subPath = subPath + ".css";
                 }
-                if (subPath in resetCollection) {
+                if (subPath in reset) {
                   resetName = subPath;
                 } else {
                   throw new Error("Invalid reset css: " + subPath);
                 }
               }
-              resetCSS = resetCollection[resetName];
+              resetCSS = reset[resetName];
             } else if (unoPresets.has(presetName) && !presets.includes(presetName)) {
               presets.push(presetName);
               if (presetName === "preset-web-fonts") {
                 webFontsProvider = "google";
-                if (reset.length > 0) {
-                  const subPath = reset.join("/");
+                if (a.length > 0) {
+                  const subPath = a.join("/");
                   if (["google", "bunny", "fontshare"].includes(subPath)) {
                     webFontsProvider = subPath;
                   } else {
