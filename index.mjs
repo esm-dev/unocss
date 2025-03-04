@@ -12,9 +12,9 @@ const unoPresets = new Set([
   "preset-rem-to-px",
   "preset-tagify",
   "preset-typography",
-  "preset-uno",
   "preset-web-fonts",
-  "preset-wind",
+  "preset-wind3",
+  "preset-wind4",
 ]);
 const themeProperties = [
   "width",
@@ -316,7 +316,7 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
 
   // add default preset if no preset is provided
   if (presets.length === 0) {
-    const { default: presetUno } = await importPreset("preset-uno");
+    const { default: presetUno } = await importPreset("preset-wind4");
     presets.push(presetUno);
   }
 
@@ -369,12 +369,12 @@ function importPreset(name) {
       return import("@unocss/preset-tagify");
     case "preset-typography":
       return import("@unocss/preset-typography");
-    case "preset-uno":
-      return import("@unocss/preset-uno");
     case "preset-web-fonts":
       return import("@unocss/preset-web-fonts");
-    case "preset-wind":
-      return import("@unocss/preset-wind");
+    case "preset-wind3":
+      return import("@unocss/preset-wind3");
+    case "preset-wind4":
+        return import("@unocss/preset-wind4");
     default:
       throw new Error("module not found: " + name);
   }
