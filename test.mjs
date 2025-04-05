@@ -70,7 +70,7 @@ assertStringIncludes(generatedCSS, ".animate-spin{animation:spin 1s ease 1;}");
 // shortcuts
 assertStringIncludes(
   generatedCSS,
-  `.custom{font-size:1.125rem;line-height:1.75rem;--un-text-opacity:100%;color:color-mix(in oklch, var(--colors-primary) var(--un-text-opacity), transparent);--un-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold);font-family:var(--font-sans);}`,
+  `.custom{font-size:var(--text-lg-font-size);line-height:var(--un-leading, var(--text-lg-line-height));color:color-mix(in oklch, var(--colors-primary) var(--un-text-opacity), transparent);--un-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold);font-family:var(--font-sans);}`,
 );
 
 // web fonts
@@ -86,7 +86,7 @@ assertStringIncludes(generatedCSS, '.hover\\:i-twemoji-face-with-tears-of-joy:ho
 
 // attributify
 assertStringIncludes(generatedCSS, '.rounded,\n[border~="rounded"]{border-radius:0.25rem;}');
-assertStringIncludes(generatedCSS, '[border~="blue-200"]{--un-border-opacity:100%;border-color:color-mix(in oklch, var(--colors-blue-200) var(--un-border-opacity), transparent);}');
+assertStringIncludes(generatedCSS, '[border~="blue-200"]{border-color:color-mix(in oklch, var(--colors-blue-200) var(--un-border-opacity), transparent);}');
 assertStringIncludes(generatedCSS, '[border~="\\32 "]{border-width:2px;}');
 
 // tagify
