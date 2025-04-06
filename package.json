@@ -5,22 +5,22 @@
   "main": "index.mjs",
   "module": "index.mjs",
   "dependencies": {
-    "@unocss/core": "^66.1.0-beta.9",
-    "@unocss/preset-attributify": "^66.1.0-beta.9",
-    "@unocss/preset-icons": "^66.1.0-beta.9",
-    "@unocss/preset-legacy-compat": "^66.1.0-beta.9",
-    "@unocss/preset-mini": "^66.1.0-beta.9",
-    "@unocss/preset-rem-to-px": "^66.1.0-beta.9",
-    "@unocss/preset-tagify": "^66.1.0-beta.9",
-    "@unocss/preset-typography": "^66.1.0-beta.9",
-    "@unocss/preset-web-fonts": "^66.1.0-beta.9",
-    "@unocss/preset-wind3": "^66.1.0-beta.9",
-    "@unocss/preset-wind4": "^66.1.0-beta.9",
+    "@unocss/core": "^66.1.0-beta.10",
+    "@unocss/preset-attributify": "^66.1.0-beta.10",
+    "@unocss/preset-icons": "^66.1.0-beta.10",
+    "@unocss/preset-legacy-compat": "^66.1.0-beta.10",
+    "@unocss/preset-mini": "^66.1.0-beta.10",
+    "@unocss/preset-rem-to-px": "^66.1.0-beta.10",
+    "@unocss/preset-tagify": "^66.1.0-beta.10",
+    "@unocss/preset-typography": "^66.1.0-beta.10",
+    "@unocss/preset-web-fonts": "^66.1.0-beta.10",
+    "@unocss/preset-wind3": "^66.1.0-beta.10",
+    "@unocss/preset-wind4": "^66.1.0-beta.10",
     "css-tree": "^3.1.0"
   },
   "devDependencies": {
     "@types/css-tree": "2.3.10",
-    "@unocss/reset": "66.1.0-beta.9"
+    "@unocss/reset": "66.1.0-beta.10"
   },
   "scripts": {
     "prepublishOnly": "node test.mjs",
