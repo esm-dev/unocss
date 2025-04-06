@@ -1,3 +1,5 @@
+import { join } from "node:path";
+import { homedir } from "node:os";
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
@@ -13,6 +15,7 @@ const unoPresets = new Set([
   "preset-tagify",
   "preset-typography",
   "preset-web-fonts",
+  "preset-wind",
   "preset-wind3",
   "preset-wind4",
 ]);
@@ -87,7 +90,10 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
     const animation = theme.animation || (theme.animation = {});
     (animation[type] || (animation[type] = {}))[toCamelCase(key)] = value;
   };
-  const defaultCacheDir = async () => (await import("node:os")).homedir() + "/.cache/unocss";
+  const defaultCacheDir = () =>
+    process.platform === "win32"
+      ? join(process.env.LOCALAPPDATA ?? join(homedir, "AppData", "Local"), "unocss", "Cache")
+      : join(homedir(), ".cache", "unocss");
   const parseTheme = (block) => {
     walk(block, (node) => {
       if (node.type === "Declaration") {
@@ -242,7 +248,7 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
       presets[i] = preset;
       if (presetName === "preset-web-fonts") {
         if (Object.keys(webFonts).length > 0) {
-          const cacheDir = (customCacheDir ?? await defaultCacheDir()) + "/webfonts";
+          const cacheDir = (customCacheDir ?? defaultCacheDir()) + "/webfonts";
           presets[i] = preset({
             provider: webFontsProvider,
             fonts: webFonts,
@@ -274,7 +280,7 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
           });
         }
       } else if (presetName === "preset-icons") {
-        const cacheDir = (customCacheDir ?? await defaultCacheDir()) + "/icons";
+        const cacheDir = (customCacheDir ?? defaultCacheDir()) + "/icons";
         presets[i] = preset({
           cdn: "https://esm.sh/",
           customFetch: async (url) => {
@@ -373,8 +379,9 @@ function importPreset(name) {
       return import("@unocss/preset-web-fonts");
     case "preset-wind3":
       return import("@unocss/preset-wind3");
+    case "preset-wind":
     case "preset-wind4":
-        return import("@unocss/preset-wind4");
+      return import("@unocss/preset-wind4");
     default:
       throw new Error("module not found: " + name);
   }
