@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { generate as toCSS, parse, walk } from "css-tree";
 import { createGenerator } from "@unocss/core";
+import transformerVariantGroup from "@unocss/transformer-variant-group";
 import reset from "./reset.mjs";
 
 const unoPresets = new Set([
@@ -326,7 +327,7 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
     presets.push(presetUno);
   }
 
-  const uno = await createGenerator({ presets, theme, shortcuts, preflights });
+  const uno = await createGenerator({ presets, theme, shortcuts, preflights, transformers: [transformerVariantGroup()] });
   const tokens = new Set();
 
   return {

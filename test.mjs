@@ -32,8 +32,8 @@ const configCSS = css`
 }
 
 .custom {
-  --uno: text-primary text-lg font-bold;
-  --uno: font-sans;
+  --uno: text-primary text-lg;
+  --uno: font-(italic bold) font-sans;
   display: flex;
 }
 
@@ -70,7 +70,7 @@ assertStringIncludes(generatedCSS, ".animate-spin{animation:spin 1s ease 1;}");
 // shortcuts
 assertStringIncludes(
   generatedCSS,
-  `.custom{font-size:var(--text-lg-font-size);line-height:var(--un-leading, var(--text-lg-line-height));color:color-mix(in oklch, var(--colors-primary) var(--un-text-opacity), transparent);--un-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold);font-family:var(--font-sans);}`,
+  `.custom{font-size:var(--text-lg-fontSize);line-height:var(--un-leading, var(--text-lg-lineHeight));color:color-mix(in oklch, var(--colors-primary) var(--un-text-opacity), transparent);--un-font-weight:var(--fontWeight-bold);font-weight:var(--fontWeight-bold);font-family:var(--font-sans);font-style:italic;}`,
 );
 
 // web fonts
@@ -85,7 +85,7 @@ assertStringIncludes(generatedCSS, '.i-twemoji-grinning-face-with-smiling-eyes{b
 assertStringIncludes(generatedCSS, '.hover\\:i-twemoji-face-with-tears-of-joy:hover{background:url("data:image/svg+xml;utf8,');
 
 // attributify
-assertStringIncludes(generatedCSS, '.rounded,\n[border~="rounded"]{border-radius:0.25rem;}');
+assertStringIncludes(generatedCSS, '.rounded,\n[border~="rounded"]{border-radius:var(--radius-DEFAULT);}');
 assertStringIncludes(generatedCSS, '[border~="blue-200"]{border-color:color-mix(in oklch, var(--colors-blue-200) var(--un-border-opacity), transparent);}');
 assertStringIncludes(generatedCSS, '[border~="\\32 "]{border-width:2px;}');
 
