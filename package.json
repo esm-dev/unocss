@@ -5,23 +5,23 @@
   "main": "index.mjs",
   "module": "index.mjs",
   "dependencies": {
-    "@unocss/core": "^66.1.0-beta.12",
-    "@unocss/preset-attributify": "^66.1.0-beta.12",
-    "@unocss/preset-icons": "^66.1.0-beta.12",
-    "@unocss/preset-legacy-compat": "^66.1.0-beta.12",
-    "@unocss/preset-mini": "^66.1.0-beta.12",
-    "@unocss/preset-rem-to-px": "^66.1.0-beta.12",
-    "@unocss/preset-tagify": "^66.1.0-beta.12",
-    "@unocss/preset-typography": "^66.1.0-beta.12",
-    "@unocss/preset-web-fonts": "^66.1.0-beta.12",
-    "@unocss/preset-wind3": "^66.1.0-beta.12",
-    "@unocss/preset-wind4": "^66.1.0-beta.12",
-    "@unocss/transformer-variant-group": "^66.1.0-beta.12",
+    "@unocss/core": "^66.1.0",
+    "@unocss/preset-attributify": "^66.1.0",
+    "@unocss/preset-icons": "^66.1.0",
+    "@unocss/preset-legacy-compat": "^66.1.0",
+    "@unocss/preset-mini": "^66.1.0",
+    "@unocss/preset-rem-to-px": "^66.1.0",
+    "@unocss/preset-tagify": "^66.1.0",
+    "@unocss/preset-typography": "^66.1.0",
+    "@unocss/preset-web-fonts": "^66.1.0",
+    "@unocss/preset-wind3": "^66.1.0",
+    "@unocss/preset-wind4": "^66.1.0",
+    "@unocss/transformer-variant-group": "^66.1.0",
     "css-tree": "^3.1.0"
   },
   "devDependencies": {
     "@types/css-tree": "2.3.10",
-    "@unocss/reset": "66.1.0-beta.12"
+    "@unocss/reset": "66.1.0"
   },
   "scripts": {
     "prepublishOnly": "node test.mjs",
