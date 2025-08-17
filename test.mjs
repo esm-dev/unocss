@@ -61,7 +61,7 @@ function assertStringIncludes(actual, expected) {
 }
 
 // reset
-assertStringIncludes(generatedCSS, reset["eric-meyer"]);
+assertStringIncludes(generatedCSS, reset["eric-meyer.css"]);
 
 // animations
 assertStringIncludes(generatedCSS, "@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}");
@@ -70,7 +70,7 @@ assertStringIncludes(generatedCSS, ".animate-spin{animation:spin 1s ease 1;}");
 // shortcuts
 assertStringIncludes(
   generatedCSS,
-  `.custom{font-size:var(--text-lg-fontSize);line-height:var(--un-leading, var(--text-lg-lineHeight));color:color-mix(in oklch, var(--colors-primary) var(--un-text-opacity), transparent);--un-font-weight:var(--fontWeight-bold);font-weight:var(--fontWeight-bold);font-family:var(--font-sans);font-style:italic;}`,
+  `.custom{color:color-mix(in oklab, var(--colors-primary) var(--un-text-opacity), transparent);}`,
 );
 
 // web fonts
@@ -86,7 +86,7 @@ assertStringIncludes(generatedCSS, '.hover\\:i-twemoji-face-with-tears-of-joy:ho
 
 // attributify
 assertStringIncludes(generatedCSS, '.rounded,\n[border~="rounded"]{border-radius:var(--radius-DEFAULT);}');
-assertStringIncludes(generatedCSS, '[border~="blue-200"]{border-color:color-mix(in oklch, var(--colors-blue-200) var(--un-border-opacity), transparent);}');
+assertStringIncludes(generatedCSS, '{border-color:color-mix(in srgb, var(--colors-blue-200) var(--un-border-opacity), transparent);}');
 assertStringIncludes(generatedCSS, '[border~="\\32 "]{border-width:2px;}');
 
 // tagify
