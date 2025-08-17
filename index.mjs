@@ -380,6 +380,7 @@ function importPreset(name) {
       return import("@unocss/preset-web-fonts");
     case "preset-wind3":
     case "preset-wind":
+    case "preset-uno":
       return import("@unocss/preset-wind3");
     case "preset-wind4":
       return import("@unocss/preset-wind4");
