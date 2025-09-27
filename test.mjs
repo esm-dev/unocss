@@ -93,7 +93,8 @@ assertStringIncludes(generatedCSS, '[border~="\\32 "]{border-width:2px;}');
 assertStringIncludes(generatedCSS, "flex{display:flex;}");
 
 // typography
-assertStringIncludes(generatedCSS, ".prose :where(");
+assertStringIncludes(generatedCSS, "/* layer: typography */");
+assertStringIncludes(generatedCSS, ":is(.prose){");
 
 // extra css
 assertStringIncludes(generatedCSS, "*{padding:0;margin:0}");
