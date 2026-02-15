@@ -157,7 +157,7 @@ export async function init({ configCSS, customCacheDir, iconLoader } = {}) {
           if (name && name.type === "String") {
             const [presetName, ...a] = (name.value.startsWith("@unocss/") ? name.value.slice(8) : name.value).split("/");
             if (presetName === "reset") {
-              let resetName = "tailwind.css";
+              let resetName = "tailwind-v4.css";
               if (a.length > 0) {
                 let subPath = a.join("/");
                 if (!subPath.endsWith(".css")) {
